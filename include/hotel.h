@@ -43,7 +43,7 @@ typedef struct {
     char saida[TAM_DATE];
 } estadia;
 
-typedef struct {
+typedef struct s_hotel{
     char endereco[TAM_MAX_ADDR];
     char nome[TAM_MAX_NAME];
     char ceos[3][TAM_MAX_NAME];

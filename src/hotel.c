@@ -15,7 +15,7 @@ t_hotel inicializaHotel() {
         f = fopen(path, "wb");
         if(!f){
             printf("Erro: Não foi possível criar o arquivo!\n");
-            return;
+            return inicializaHotel();
         }
         strcpy(hotel.nome, "Hotel Descanso Garantido");
         strcpy(hotel.endereco, "Itacaé, Bahia");
@@ -26,6 +26,7 @@ t_hotel inicializaHotel() {
         hotel.estadias = (estadia*) malloc(sizeof(estadia) * 0);
         hotel.funcionarios = (funcionario*) malloc(sizeof(funcionario) * 0);
         hotel.clientes = (cliente*) malloc(sizeof(cliente) * 0);
+        fwrite(&hotel, sizeof(t_hotel), 1, f);
     }
     
     fclose(f);
@@ -39,6 +40,13 @@ void atualizaHotel(t_hotel *hotel) {
     fwrite(hotel, sizeof(t_hotel), 1, f);
 
     fclose(f);
+}
+
+void fechaHotel(t_hotel *hotel){
+    free(hotel->clientes);
+    free(hotel->funcionarios);
+    free(hotel->estadias);
+    free(hotel->quartos);
 }
 
 void cadastrarCliente(t_hotel *hotel) {
