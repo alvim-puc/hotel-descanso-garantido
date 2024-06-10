@@ -31,6 +31,8 @@ hotel-descanso-garantido/
 └── Makefile (arquivo de compilação)
 ```
 
+## Backlog
+
 ## Instalação
 
 Clone este repositório
@@ -59,10 +61,7 @@ make
 ./bin/main.exe
 ```
 
-## Backlog
-
 ## Testes
-
 
 ## Utilização
 
