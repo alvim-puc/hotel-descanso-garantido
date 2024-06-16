@@ -1,23 +1,26 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <atomic>
+#include<string>
 
 class Client{ 
     private:
     int id;
-    char name[30];
-    char address[50];
-    unsigned long long cellphone; 
+    std::string name;
+    std::string address;
+    unsigned long long cellphone;
+    static int ID;
 
     public:
-    void setId(int value){
-        id = value;
+    Client(){
+        id=ID++;
     }
     void setName(const char* value){
-        strcpy(name,value);
+        name = value;
     }
     void setAddress(const char* value){
-        strcpy(address,value);
+        address = value;
     } 
     void setCellphone(unsigned long long value){
         cellphone = value;
@@ -26,16 +29,33 @@ class Client{
     int getId(){
         return id;
     }
-    const char* getName(){
+    std::string& getName(){
         return name;
     }
-    const char* getAddress(){
+    std::string& getAddress(){
         return address;
     }
     unsigned long long getCellphone(){
         return cellphone;
     }
+    std::string showData() const {
+        std::string data = "ID: " + std::to_string(id) + "\n";
+        data += "Nome: " + name + "\n";
+        data += "Endereco: " + address + "\n";
+        data += "Telefone: " + std::to_string(cellphone) + "\n";
+        return data;
+    }
+    friend std::ostream& operator<<(std::ostream& os, const Client& client); //operator tem acesso aos atributos privados de client
 
 };
+int Client::ID = 0;
+std::ostream& operator<<(std::ostream& os, const Client& client) {
+    os << "ID: " << client.id << std::endl;
+    os << "Nome: " << client.name << std::endl;
+    os << "Endereco: " << client.address << std::endl;
+    os << "Telefone: " << client.cellphone << std::endl;
+    return os;
+}
+
 
 #endif 

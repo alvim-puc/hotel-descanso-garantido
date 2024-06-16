@@ -1,6 +1,7 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
+#include <atomic>
 
 class Employee{
     private:
@@ -9,10 +10,11 @@ class Employee{
     unsigned long long cellphone;
     char officePosition[30];
     int salary;
+    static int ID;
 
     public:
-    void setId(int value){
-        id = value;
+    Employee(){
+        id=ID++;
     }
     void setName(const char* value){
         strcpy(name,value);
@@ -44,4 +46,7 @@ class Employee{
     }
 
 };
+
+int Employee::ID = 0;
+
 #endif 

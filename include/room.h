@@ -1,6 +1,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include <atomic>
 
 class Room{ 
     private:
@@ -8,10 +9,10 @@ class Room{
     int qntGuest;
     int dailyValue;
     char state[20]; 
-
+    static int IDROOM;
     public:
-    void setRoomNum(int value){
-        roomNum = value;
+    Room(){
+        roomNum = IDROOM++;
     }
     void setQntGuest(int value){
         qntGuest = value;
@@ -19,7 +20,7 @@ class Room{
     void setAddress(int value){
         dailyValue = value;
     } 
-    const char* setCellphone(const char* value){
+    void setCellphone(const char* value){
         strcpy(state,value);
     }
 
@@ -37,5 +38,7 @@ class Room{
     }
 
 };
+int Room::IDROOM = 0;
+
 
 #endif 
