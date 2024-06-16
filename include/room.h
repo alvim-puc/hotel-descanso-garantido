@@ -7,7 +7,7 @@ class Room{
     int roomNum;
     int qntGuest;
     int dailyValue;
-    bool state; 
+    char state[20]; 
 
     public:
     void setRoomNum(int value){
@@ -19,8 +19,8 @@ class Room{
     void setAddress(int value){
         dailyValue = value;
     } 
-    void setCellphone(bool value){
-        state = value;
+    const char* setCellphone(const char* value){
+        strcpy(state,value);
     }
 
     int getRoomNum(){
@@ -32,7 +32,7 @@ class Room{
     int getDailyValue(){
         return dailyValue;
     }
-    bool getState(){
+    const char* getState(){
         return state;
     }
 
