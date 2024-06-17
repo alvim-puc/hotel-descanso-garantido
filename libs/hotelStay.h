@@ -51,4 +51,4 @@ class HotelStay{
     }
 
 };
-#endif 
+#endif // HOTELSTAY_H

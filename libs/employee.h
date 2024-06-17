@@ -3,6 +3,8 @@
 
 #include <atomic>
 
+using namespace std;
+
 class Employee{
     private:
     int id;
