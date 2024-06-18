@@ -37,6 +37,22 @@ bool readClientsFromFile(const string& filename, vector<Client>& clients) {
     return true;
 }
 
+bool readEmployeesFromFile(const string& filename, vector<Employee>& employees){
+    ifstream employeeFile(filename, ios::binary);
+    if (!employeeFile) {
+        cerr << endl << "(500 Error) Could not open client data file: " << filename << endl
+        return false
+    }
+
+    Employee employee;
+    while(employeeFile.peek() != EOF){
+        employee.deserialize(employeeFile);
+        employees.push_back(employee);
+    }
+
+    employeeFile.close();
+    return true;
+}
 
 void registerCustomer(vector<Client>& clients, const string& filename) {
     unsigned long long cellphone;

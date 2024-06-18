@@ -86,11 +86,11 @@ public:
 };
 
 ostream& operator<<(ostream& os, const Client& client) {
-    os << "ID: " << client.id << endl;
-    os << "Nome: " << client.name << endl;
-    os << "Endereco: " << client.address << endl;
-    os << "Telefone: " << client.cellphone << endl;
-    return os;
+os << "ID: " << client.id << endl;
+os << "Nome: " << client.name << endl;
+os << "Endereco: " << client.address << endl;
+os << "Telefone: " << client.cellphone << endl;
+return os;
 }
 
 #endif

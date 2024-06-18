@@ -11,7 +11,7 @@ class Employee{
     char name[30];
     unsigned long long cellphone;
     char officePosition[30];
-    int salary;
+    double salary;
     static int ID;
 
     public:
@@ -47,8 +47,17 @@ class Employee{
         return salary;
     }
 
+
+    friend ostream& operator<<(ostream& os, const Employee& employee);
+
 };
 
-int Employee::ID = 0;
+ostream& operator<<(ostream& os, const Client& client) {
+    os << "ID: " << client.id << endl;
+    os << "Nome: " << client.name << endl;
+    os << "Endereco: " << client.address << endl;
+    os << "Telefone: " << client.cellphone << endl;
+    return os;
+}
 
 #endif 

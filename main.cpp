@@ -36,8 +36,6 @@ int main(){
     cout << "   Bem vindo ao Hotel Descanso Garantido | Itacaré - BA   " << endl;
     cout << "----------------------------------------------------------" << endl;
     
-    Client client1;
-    Employee employee;
     HotelStay hotelStay;
     Room room;
 
@@ -45,6 +43,11 @@ int main(){
     string clientFilename = "data/clients.dat";
     if (!readClientsFromFile(clientFilename, clients))
         cerr << "(Warning) Using empty client list" << endl << endl << endl;
+
+    vector<Employee> employees;
+    string employeeFilename = "data/employees.dat";
+    if(!readEmployeesFromFile(employeeFilename, employees));
+        cerr << "(Warning) Using empty employee list" << endl << endl << endl;
 
     int choice;
     do{
