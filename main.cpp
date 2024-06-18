@@ -54,9 +54,10 @@ int main(){
         menu(&choice);
         switch(choice) {
             case 1:
-                registerCustomer(clients, clientFilename);
+                registerClient(clients, clientFilename);
                 break;
             case 2:
+                registerEmployee(employees, employeeFilename);
                 break;
             case 3:
                 break;
