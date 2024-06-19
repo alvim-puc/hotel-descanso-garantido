@@ -25,12 +25,54 @@ void menu(int* choice){
     cout << endl << "Escolha uma opção: ";
     cin >> *choice;
     cin.ignore(); // limapr o buffer
-    clr();
+   // clr();
+}
+void registerEmployee(const std::string employeeFilename){
+    std::string name, officePosition;
+    unsigned long long cellphone;
+    double salary;
+    
+    std::cout <<  "Digite o nome do funcionario: ";
+    std::getline(std::cin, name);
+
+    std::cout <<  "Digite o celular do funcionario: ";
+    std::cin >> cellphone;
+    std::cin.ignore();
+
+    std::cout << "Digite o cargo do funcionario: ";
+    std::getline(std::cin, officePosition);
+
+    std::cout <<  "Digite o salario do funcionario: ";
+    std::cin >> salary;
+
+    Employee employee(name,cellphone,officePosition,salary);
+    if(employee.writeToFile(employeeFilename)){
+        std::cout << "Funcionario cadastrado com sucesso!\n";
+    }else{
+        std::cout << "Erro ao cadastrar funcionario.\n";
+    }
+    
+}
+
+void viewEmployee(const std::string employeeFilename){
+    int id;
+    Employee foundEmployee;
+    std::cout <<  "Digite o  ID nome do funcionario: ";
+    std::cin >> id;
+    if(Employee::getEmployeeById(employeeFilename,id,foundEmployee)){
+        std::cout << "Funcionario encontrado:\n";
+        std::cout << "Nome: " << foundEmployee.getName() << "\n";
+        std::cout << "Telefone: " << foundEmployee.getCellphone() << "\n";
+        std::cout << "Cargo: " << foundEmployee.getOfficePosition() << "\n";
+        std::cout << "Salario: " << foundEmployee.getSalary() << "\n";  
+    }else{
+        std::cout << "Funcionario com o ID " << id << " nao encontrado!\n";
+    }
 }
 
 int main(){
     setlocale(LC_ALL, "");
-    clr();
+   // clr();
 
     cout << "----------------------------------------------------------" << endl;
     cout << "   Bem vindo ao Hotel Descanso Garantido | Itacaré - BA   " << endl;
@@ -38,25 +80,28 @@ int main(){
     
     HotelStay hotelStay;
     Room room;
-
+/*
     vector<Client> clients;
     string clientFilename = "data/clients.dat";
     if (!readClientsFromFile(clientFilename, clients))
-        cerr << "(Warning) Using empty client list" << endl << endl << endl;
-
+        cerr << "(Warning) Using empty client list" << endl << endl << endl; */
+    /*
     vector<Employee> employees;
     string employeeFilename = "data/employees.dat";
     if(!readEmployeesFromFile(employeeFilename, employees));
-        cerr << "(Warning) Using empty employee list" << endl << endl << endl;
+        cerr << "(Warning) Using empty employee list" << endl << endl << endl;*/
+    
+    std::string employeeFilename = "data/employees.dat";
 
     int choice;
     do{
         menu(&choice);
         switch(choice) {
             case 1:
-                registerCustomer(clients, clientFilename);
+               // registerCustomer(clients, clientFilename);
                 break;
             case 2:
+                registerEmployee(employeeFilename);
                 break;
             case 3:
                 break;
@@ -65,10 +110,10 @@ int main(){
             case 5:
                 break;
             case 6:
-                searchClient(clients);
+             //   searchClient(clients);
                 break;
             case 7:
-                searchEmployee(employees);
+                viewEmployee(employeeFilename);
                 break;
             case 0:
                 printf("Obrigado por usar nosso sistema, Até mais!");

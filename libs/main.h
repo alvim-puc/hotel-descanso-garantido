@@ -1,3 +1,5 @@
+
+/*
 #ifndef HOTEL_H
 #define HOTEL_H
 
@@ -202,3 +204,4 @@ void showCustomers(const vector<Client>& clients) {
 
 
 #endif // HOTEL_H
+*/
