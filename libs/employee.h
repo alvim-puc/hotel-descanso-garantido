@@ -117,6 +117,7 @@ public:
     friend ostream& operator<<(ostream& os, const Employee& employee);
 };
 
+int Employee::ID = 0;
 
 /**
  * @brief Sobrecarga do operador de inserção para a classe Client.
