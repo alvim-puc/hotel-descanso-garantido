@@ -12,6 +12,7 @@
 
 using namespace std;
 
+/* Função de limpar terminal */
 void clr(){
   #ifdef __unix__
     system("clear");
@@ -19,6 +20,7 @@ void clr(){
     system("cls");
   #endif
 }
+
 
 void registerCustomer(const string& filename) {
     unsigned long long cellphone;
@@ -33,20 +35,24 @@ void registerCustomer(const string& filename) {
 
     cout << endl << "Digite o telefone: ";
     cin >> cellphone;
-    fflush(stdin);
+    fflush(stdin); // Limpa o buffer
 
+    // Cria um cliente e insere na classe seus dados;
     Customer customer;
     customer.setName(name);
     customer.setAddress(address);
     customer.setCellphone(cellphone);
     customer.setId(customer.getMaxId(filename) + 1);
 
+    // Abre o arquivo e, caso o mesmo nn exista, ele é criado
     ofstream outFile(filename, ios::binary | ios::app);
+    // Garantia de tratamento de erro, caso não abra e nem seja criado de maneira alguma
     if (!outFile) {
         cerr << "Error: Could not open customer data file for writing." << endl;
         return;
     }
 
+    // Insere os dados do cliente no arquivo
     customer.serialize(outFile);
 
     outFile.close();
@@ -56,12 +62,12 @@ void registerCustomer(const string& filename) {
 
 void searchCustomer(Customer& C, const string& path) {
     int option;
-    cout << "Escolha o critério de pesquisa:\n";
+    cout << "Escolha o modo de pesquisa:\n";
     cout << "1. Pesquisar por ID\n";
     cout << "2. Pesquisar por nome\n";
     cout << "Digite a opção (1 ou 2): ";
     cin >> option;
-    if(cin.fail()) cin.clear(); //Funcionar funciona..
+    if(cin.fail()) cin.clear(); // Funcionar funciona.. Garante que o usuário não quebre o programa digitando literais
     clr();
 
     if (option == 1) {
@@ -81,13 +87,6 @@ void searchCustomer(Customer& C, const string& path) {
 
     } else {
         cout << "Opção inválida. Tente novamente.\n";
-    }
-}
-
-void showCustomers(const vector<Customer>& customers) {
-    cout << endl << "Customeres Cadastrados:\n";
-    for (const auto& customer : customers) {
-        cout << customer << endl;
     }
 }
 

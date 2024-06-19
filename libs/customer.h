@@ -49,17 +49,36 @@ public:
         return cellphone;
     }
 
+    /**
+     * @brief Busca o numero de clientes do arquivo
+     * 
+     * Percorre por todo o arquivo instanciando users e comparando com o anterior o Id.
+     * Após percorrer tudo, retorna o maior valor encontrado.
+     *
+     * @param filename
+     * @return quantidade de clientes presente no arquivo, ou seja, o valor máximo de todos os Ids
+     */
     int getMaxId(const string& filename);
 
     /**
-     * @brief 
+     * @brief Busca cliente pelo Nome
+     *
+     * A função busca um cliente com base em seu Nome no arquivo dta.customers.dat
+     e printa na tela os dados do cliente filtrado
      * 
+     * @param searchName Nome do cliente a ser buscado no arquivo
+     * @param filename Caminho do arquivo a ser lido para buscar o cliente
      */
     void findByName(const string& filename, const string& searchName);
 
     /**
-     * @brief 
+     * @brief Busca um cliente pelo ID fornecido
      * 
+     * A função busca um cliente com base em seu Id do arquivo data/customers.dat
+     e printa na tela os dados do cliente filtrado
+     *
+     * @param searchId Id do cliente a ser buscado no arquivo
+     * @param filename Caminho do arquivo a ser lido para buscar o cliente 
      */
     void findByID(const string& filename, int searchId);
 
@@ -78,7 +97,7 @@ public:
      * durante a desserialização. Isso garante que o comprimento exato das strings seja conhecido e possa ser
      * reconstruído corretamente.
      * 
-     * @param `os` O fluxo de saída onde os dados do customer serão inseridos.
+     * @param os O fluxo de saída onde os dados do customer serão inseridos.
     */
     void serialize(ostream& os) const;
 
@@ -96,7 +115,7 @@ public:
      * As variáveis de tamanho para o nome e endereço são usadas para reconstruir corretamente as strings,
      * garantindo que o comprimento exato de cada string seja conhecido.
      * 
-     * @param `is` O fluxo de entrada onde os dados do customer serão inseridos.
+     * @param is O fluxo de entrada onde os dados do customer serão inseridos.
     */
     void deserialize(istream& is);
     
@@ -115,8 +134,8 @@ public:
      * Cada campo é inserido no fluxo de saída, seguido por uma quebra de linha (endl) para
      * garantir que cada campo apareça em uma nova linha.
      * 
-     * @param `os` O fluxo de saída onde os dados do customer serão inseridos.
-     * @param `customer` O objeto Customer cujos dados serão inseridos no fluxo de saída.
+     * @param os O fluxo de saída onde os dados do customer serão inseridos.
+     * @param customer O objeto Customer cujos dados serão inseridos no fluxo de saída.
      * @return O fluxo de saída com os dados do customer inseridos.
     */
     friend ostream& operator<<(ostream& os, const Customer& customer);
@@ -222,4 +241,4 @@ ostream& operator<<(ostream& os, const Customer& customer) {
     return os;
 }
 
-#endif
+#endif // CUSTOMER_H

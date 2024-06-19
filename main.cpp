@@ -16,14 +16,14 @@ void menu(int* choice){
     cout << "                          MENU                            " << endl;
     cout << "----------------------------------------------------------" << endl;
     cout << endl << "Digite 0 para encerrar o porgrama";
-    cout << endl << "Digite 1 para cadastrar um customere";
-    cout << endl << "Digite 2 para cadastrar um funcionário";
+    cout << endl << "Digite 1 para cadastrar um cliente";
+    cout << endl << "Digite 2 para cadastrar um funcionario";
     cout << endl << "Digite 3 para cadastrar um quarto";
     cout << endl << "Digite 4 para cadastrar uma estadia";
     cout << endl << "Digite 5 para dar baixa em uma estadia";
-    cout << endl << "Digite 6 para pesquisar um customere";
-    cout << endl << "Digite 7 para pesquisar um funcionário";
-    cout << endl << "Escolha uma opção: ";
+    cout << endl << "Digite 6 para pesquisar um cliente";
+    cout << endl << "Digite 7 para pesquisar um funcionario";
+    cout << endl << "Escolha uma opcao: ";
     cin >> *choice;
     cin.ignore(); // limapr o buffer
     clr();
@@ -34,7 +34,7 @@ int main(){
     clr();
 
     cout << "----------------------------------------------------------" << endl;
-    cout << "   Bem vindo ao Hotel Descanso Garantido | Itacaré - BA   " << endl;
+    cout << "   Bem vind@ ao Hotel Descanso Garantido | Itacare - BA   " << endl;
     cout << "----------------------------------------------------------" << endl;
     
     HotelStay hotelStay;
@@ -64,10 +64,10 @@ int main(){
             case 7:
                 break;
             case 0:
-                printf("Obrigado por usar nosso sistema, Até mais!");
+                printf("Obrigado por usar nosso sistema, Volte sempre!");
                 break;
             default:
-                printf("Opção inválida\n");
+                printf("Escolha inexistente\n");
                 break;
         }
     } while (choice != 0);
