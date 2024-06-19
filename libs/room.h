@@ -7,33 +7,22 @@ class Room{
     private:
     int roomNum;
     int qntGuest;
-    int dailyValue;
-    char state[20]; 
+    float dailyValue;
+    std::string state; 
     static int IDROOM;
     public:
-    Room(){
-        roomNum = IDROOM++;
-    }
-    void setQntGuest(int value){
-        qntGuest = value;
-    }
-    void setAddress(int value){
-        dailyValue = value;
-    } 
-    void setCellphone(const char* value){
-        strcpy(state,value);
-    }
-
+    Room() : roomNum(0), qntGuest(0), dailyValue(0.0), state(""){}
+    Room( int qntGuest, float dailyValue,  std::string state):roomNum(++IDROOM), qntGuest(qntGuest),dailyValue(dailyValue),state(state) {}
     int getRoomNum(){
         return roomNum;
     }
     int getQntGuest(){
         return qntGuest;
     }
-    int getDailyValue(){
+    float getDailyValue(){
         return dailyValue;
     }
-    const char* getState(){
+    std::string getState(){
         return state;
     }
 
