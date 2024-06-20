@@ -60,7 +60,7 @@ class Employee{
         return false;
     }
     static bool getEmployeeById(const std::string& filename, int searchId, Employee& foundEmployee){
-         std::ifstream inFile(filename, std::ios::binary);
+        std::ifstream inFile(filename, std::ios::binary);
         if (inFile.is_open()) {
             while (true) {
                  inFile.read(reinterpret_cast<char*>(&foundEmployee.id), sizeof(foundEmployee.id));
