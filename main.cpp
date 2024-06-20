@@ -22,7 +22,7 @@ void menu(int* choice){
     cout << endl << "Digite 2 para cadastrar um funcionário";
     cout << endl << "Digite 3 para cadastrar um quarto";
     cout << endl << "Digite 4 para cadastrar uma estadia";
-    cout << endl << "Digite 5 para dar baixa em uma estadia";
+    cout << endl << "Digite 5 para pesquisar uma estadia";
     cout << endl << "Digite 6 para pesquisar um cliente";
     cout << endl << "Digite 7 para pesquisar um funcionário";
     cout << endl << "Escolha uma opcao: ";
@@ -128,7 +128,7 @@ void registerStay(const std::string& roomFilename, Room& foundRoom){
             std::cout << std::endl << "\nDigite o codigo do hospede: " ;
             std::cin >> id;
             std::cin.ignore();
-            
+            // add here the code to verify if this customer is registered
             std::cout << std::endl << "\nDigite a quantidade de hospedes: " ;
             std::cin >> qnt;
             std::cin.ignore();
@@ -157,6 +157,9 @@ void registerStay(const std::string& roomFilename, Room& foundRoom){
                             foundRoom.setState(STATUS_ROOM_BUSY);
                             foundRoom.writeToFile(roomFilename);
                             std::cout << std::endl << "\nO valor da diaria eh: \n" << hotelStay.getStayValue();
+                            if(hotelStay.writeToFile()){
+                                std::cout << std::endl << "";
+                            }
                             return;
                             }
                     }else{
@@ -166,6 +169,11 @@ void registerStay(const std::string& roomFilename, Room& foundRoom){
             }
         } while(!validInput);
 
+}
+void viewStayByClient(const std::string& clientFilename, const std::string& hotelStaysFilename){
+ // add here the function to get customer ID
+ // HotelStay foundHotelStay;
+   // getHotelStaysByName(hotelStaysFilename, id,foundHotelStay );
 }
 int main(){
     setlocale(LC_ALL, "");
@@ -177,19 +185,11 @@ int main(){
     
     HotelStay hotelStay;
     Room foundRoom;
-/*
-    vector<Client> clients;
-    string clientFilename = "data/clients.dat";
-    if (!readClientsFromFile(clientFilename, clients))
-        cerr << "(Warning) Using empty client list" << endl << endl << endl; */
-    /*
-    vector<Employee> employees;
-    string employeeFilename = "data/employees.dat";
-    if(!readEmployeesFromFile(employeeFilename, employees));
-        cerr << "(Warning) Using empty employee list" << endl << endl << endl;*/
     
     std::string employeeFilename = "data/employees.dat";
     std::string roomFilename = "data/room.dat";
+    std::string clientFilename = "data/clients.dat";
+    std::string hotelStaysFilename = "data/hotelStays.dat";
 
     int choice;
     do{
@@ -208,9 +208,10 @@ int main(){
                 registerStay(roomFilename, foundRoom);
                 break;
             case 5:
+                viewStayByClient(clientFilename,hotelStaysFilename);
                 break;
             case 6:
-             
+        
              //   searchClient(clients);
                 break;
             case 7:

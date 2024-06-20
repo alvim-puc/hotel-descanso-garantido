@@ -67,7 +67,7 @@ class HotelStay{
         }
         return false;
     }
-    static bool getHotelStaysById(const std::string& filename, int searchId, HotelStay& foundHotelStay){
+    static bool getHotelStaysByName(const std::string& filename, int searchId, HotelStay& foundHotelStay){
         std::ifstream inFile(filename, std::ios::binary);
         if (inFile.is_open()) {
             while (true) {
