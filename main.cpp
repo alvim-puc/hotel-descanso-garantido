@@ -69,7 +69,44 @@ void viewEmployee(const std::string employeeFilename){
         std::cout << "Funcionario com o ID " << id << " nao encontrado!\n";
     }
 }
+void registerRoom(const std::string roomFilename){
+    int roomNum;
+    int qntGuest;
+    float dailyValue;
+    std::string state; 
 
+    std::cout << std::endl << "Digite o numero do quarto: ";
+    std::cin >> roomNum;
+
+    std::cout << std::endl << "Digite a quantidade de hospedes: ";
+    std::cin >> qntGuest;
+
+    std::cout << std::endl << "Digite o valor da diaria: ";
+    std::cin >> dailyValue;
+    std::cin.ignore();
+
+    std::cout << std::endl << "Digite o status do quarto: ";
+    std::getline(std::cin, state);
+
+    Room room(roomNum,qntGuest,dailyValue,state);
+
+    if(room.writeToFile(roomFilename)){
+        std::cout << "Funcionario cadastrado com sucesso!\n";
+    }else{
+        std::cout << "Erro ao cadastrar funcionario.\n";
+    }
+}
+int getRoomNumber(const std::string roomFilename, std::string state, int qntGuest){
+    Room foundRoom;
+
+    if (Room::findRoom(roomFilename, state, foundRoom, qntGuest)) {
+        std::cout << std::endl << "Quarto numero: " << foundRoom.getRoomNum() << " esta " << foundRoom.getState();
+        return foundRoom.getRoomNum();
+    } else {
+        std::cout << std::endl << "Nenhum quarto disponível encontrado.";
+        return 0;
+    }
+}
 int main(){
     setlocale(LC_ALL, "");
    // clr();
@@ -92,6 +129,7 @@ int main(){
         cerr << "(Warning) Using empty employee list" << endl << endl << endl;*/
     
     std::string employeeFilename = "data/employees.dat";
+    std::string roomFilename = "data/room.dat";
 
     int choice;
     do{
@@ -104,10 +142,12 @@ int main(){
                 registerEmployee(employeeFilename);
                 break;
             case 3:
+                registerRoom(roomFilename);
                 break;
             case 4:
                 break;
             case 5:
+                getRoomNumber(roomFilename, "desocupado",3);
                 break;
             case 6:
              //   searchClient(clients);
