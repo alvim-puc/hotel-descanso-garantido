@@ -2,11 +2,11 @@
 #include <locale.h>
 #include <string.h>
 #include <vector>
-#include "libs/main.h"
 #include "libs/room.h"
-#include "libs/client.h"
+#include "libs/customer.h"
 #include "libs/employee.h"
 #include "libs/hotelStay.h"
+#include "libs/interaction.h"
 #include <regex>
 
 #define STATUS_ROOM_FREE "desocupado"
@@ -14,12 +14,13 @@
 using namespace std;
 
 void menu(int* choice){
+    cout << endl;
     cout << "----------------------------------------------------------" << endl;
     cout << "                          MENU                            " << endl;
     cout << "----------------------------------------------------------" << endl;
     cout << endl << "Digite 0 para encerrar o porgrama";
     cout << endl << "Digite 1 para cadastrar um cliente";
-    cout << endl << "Digite 2 para cadastrar um funcionário";
+    cout << endl << "Digite 2 para cadastrar um funcionario";
     cout << endl << "Digite 3 para cadastrar um quarto";
     cout << endl << "Digite 4 para cadastrar uma estadia";
     cout << endl << "Digite 5 para pesquisar uma estadia";
@@ -180,7 +181,7 @@ int main(){
    // clr();
 
     cout << "----------------------------------------------------------" << endl;
-    cout << "   Bem vindo ao Hotel Descanso Garantido | Itacaré - BA   " << endl;
+    cout << "   Bem vind@ ao Hotel Descanso Garantido | Itacare - BA   " << endl;
     cout << "----------------------------------------------------------" << endl;
     
     HotelStay hotelStay;
@@ -190,13 +191,15 @@ int main(){
     std::string roomFilename = "data/room.dat";
     std::string clientFilename = "data/clients.dat";
     std::string hotelStaysFilename = "data/hotelStays.dat";
+    Customer C;
+    string CustomerFilename = "data/customers.dat";
 
     int choice;
     do{
         menu(&choice);
         switch(choice) {
             case 1:
-               // registerCustomer(clients, clientFilename);
+                registerCustomer(CustomerFilename);
                 break;
             case 2:
                 registerEmployee(employeeFilename);
@@ -211,8 +214,7 @@ int main(){
                 viewStayByClient(clientFilename,hotelStaysFilename);
                 break;
             case 6:
-        
-             //   searchClient(clients);
+                searchCustomer(C, CustomerFilename);
                 break;
             case 7:
                 viewEmployee(employeeFilename);
