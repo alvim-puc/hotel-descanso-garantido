@@ -17,7 +17,9 @@ public:
     Room() : roomNum(0), qntGuest(0), dailyValue(0.0), state("") {}
     Room(int roomNum, int qntGuest, float dailyValue, std::string state) 
         : roomNum(roomNum), qntGuest(qntGuest), dailyValue(dailyValue), state(state) {}
-
+    void setState(std::string value){
+        state=value;
+    }
     int getRoomNum() const {
         return roomNum;
     }
@@ -39,7 +41,7 @@ public:
 
             size_t stateSize = state.size();
             outFile.write(reinterpret_cast<const char*>(&stateSize), sizeof(stateSize));
-            outFile.write(state.c_str(), stateSize);
+            outFile.write(toLowerCase(state).c_str(), stateSize);
 
             outFile.close();
             return true;
@@ -79,6 +81,7 @@ public:
         }
         return false;
     }
+ 
 };
 
 
