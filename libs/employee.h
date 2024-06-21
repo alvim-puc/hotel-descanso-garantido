@@ -4,58 +4,98 @@
 #include <atomic>
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
 class Employee {
 private:
     int id;
+
     string name;
-    string officePosition;
     unsigned long long cellphone;
+    string officePosition;
     double salary;
     static int ID;
 
-public:
-    Employee() {
-        id = ID++;
-    }
+    public:
+    Employee() : id(0), name(""), cellphone(0), officePosition(""), salary(0.0) {} //Default constructor
 
-    void setName(const char* value) {
-        name = value;
-    }
-
-    void setCellphone(unsigned long long value) {
-        cellphone = value;
-    }
-
-    void setOfficePosition(const char* value) {
-        officePosition = value;
-    }
-
-    void setSalary(double value) {
-        salary = value;
-    }
-
-    int getId() const {
+    Employee(string name, unsigned long long cellphone, string officePosition, int salary)
+        : id(++ID), name(name), cellphone(cellphone), officePosition(officePosition), salary(salary){}
+    int getId(){
         return id;
     }
-
-    string getName() const {
+    string getName(){
         return name;
     }
 
     unsigned long long getCellphone() const {
         return cellphone;
     }
-
-    string getOfficePosition() const {
+    string getOfficePosition(){
         return officePosition;
     }
 
     double getSalary() const {
         return salary;
     }
+    bool writeToFile(const string& filename) const{
+        ofstream outFile(filename, ios::binary | ios::app);
+            if(outFile.is_open()){
+                outFile.write(reinterpret_cast<const char*>(&id), sizeof(id));
+
+                size_t nameSize = name.size();
+                outFile.write(reinterpret_cast<const char*>(&nameSize), sizeof(nameSize));
+                outFile.write(name.c_str(), nameSize);
+
+                outFile.write(reinterpret_cast<const char*>(&cellphone), sizeof(cellphone));
+
+                size_t officePositionSize = officePosition.size();
+                outFile.write(reinterpret_cast<const char*>(&officePositionSize), sizeof(officePositionSize));
+                outFile.write(officePosition.c_str(), officePositionSize);
+
+                outFile.write(reinterpret_cast<const char*>(&salary), sizeof(salary));
+                
+                outFile.close();
+                return true;
+                
+            }
+        return false;
+    }
+    static bool getEmployeeById(const string& filename, int searchId, Employee& foundEmployee){
+        ifstream inFile(filename, ios::binary);
+        if (inFile.is_open()) {
+            while (true) {
+                 inFile.read(reinterpret_cast<char*>(&foundEmployee.id), sizeof(foundEmployee.id));
+                if (inFile.eof()) break;
+
+                size_t nameSize;
+                inFile.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+                foundEmployee.name.resize(nameSize);
+                inFile.read(reinterpret_cast<char*>(&foundEmployee.name[0]), nameSize);
+
+                inFile.read(reinterpret_cast<char*>(&foundEmployee.cellphone), sizeof(foundEmployee.cellphone));
+
+                size_t officePositionSize;
+                inFile.read(reinterpret_cast<char*>(&officePositionSize), sizeof(officePositionSize));
+                foundEmployee.officePosition.resize(officePositionSize);
+                inFile.read(reinterpret_cast<char*>(&foundEmployee.officePosition[0]), officePositionSize);
+
+                inFile.read(reinterpret_cast<char*>(&foundEmployee.salary), sizeof(foundEmployee.salary));
+
+                if (foundEmployee.getId() == searchId) {
+                    inFile.close();
+                    return true;
+                }
+            }
+            inFile.close();
+        }
+        return false;
+    }
+
+
 
     /**
      * @brief Serializa o objeto Employee para um fluxo de saída.
@@ -114,37 +154,9 @@ public:
         is.read(reinterpret_cast<char*>(&salary), sizeof(salary));
     }
 
-    friend ostream& operator<<(ostream& os, const Employee& employee);
+
 };
 
 int Employee::ID = 0;
-
-/**
- * @brief Sobrecarga do operador de inserção para a classe Client.
- * 
- * A função operator<< é uma sobrecarga do operador de inserção (<<) para a classe Client.
- * Ela permite que objetos da classe Client sejam facilmente impressos em fluxos de saída,
- * como std::cout, arquivos ou outros fluxos de saída. A função insere os dados do funcionário no fluxo
- * de saída de uma forma legível, incluindo:
- * - ID do funcionário
- * - Nome do funcionário
- * - Endereço do funcionário
- * - Telefone do funcionário
- * 
- * Cada campo é inserido no fluxo de saída, seguido por uma quebra de linha (endl) para
- * garantir que cada campo apareça em uma nova linha.
- * 
- * @param `os` O fluxo de saída onde os dados do funcionário serão inseridos.
- * @param `employee` O objeto Client cujos dados serão inseridos no fluxo de saída.
- * @return O fluxo de saída com os dados do funcionário inseridos.
-*/
-ostream& operator<<(ostream& os, const Employee& employee) {
-    os << "ID: " << employee.id << endl;
-    os << "Nome: " << employee.name << endl;
-    os << "Telefone: " << employee.cellphone << endl;
-    os << "Posição: " << employee.officePosition << endl;
-    os << "Salário: " << employee.salary << endl;
-    return os;
-}
 
 #endif
