@@ -5,10 +5,14 @@
 #include <string.h>
 #include <vector>
 #include <fstream>
+#include <regex>
 #include "customer.h"
 #include "employee.h"
 #include "hotelStay.h"
 #include "room.h"
+
+#define STATUS_ROOM_FREE "desocupado"
+#define STATUS_ROOM_BUSY "ocupado"
 
 using namespace std;
 
@@ -71,24 +75,211 @@ void searchCustomer(Customer& C, const string& path) {
     clr();
 
     if (option == 1) {
-        int id;
-        cout << "Digite o ID do cliente: ";
-        cin >> id;
-        fflush(stdin);
+      int id;
+      cout << "Digite o ID do cliente: ";
+      cin >> id;
+      fflush(stdin);
 
-        C.findByID(path, id);
+      Customer customer = C.findByID(path, id);
+
+      cout << customer << endl;
 
     } else if (option == 2) {
-        string name;
-        cout << "Digite o nome do cliente: ";
-        getline(cin, name);
+      string name;
+      cin.ignore(); // tira o \n do buffer
+      cout << "Digite o nome do cliente: ";
+      getline(cin, name);
 
-        C.findByName(path, name);
+      vector <Customer> customers = C.findByName(path, name);
+
+      for (Customer customer : customers) {
+        cout << customer << endl;
+      }
 
     } else {
         cout << "Opção inválida. Tente novamente.\n";
     }
 }
 
+void registerEmployee(const string employeeFilename){
+    string name, officePosition;
+    unsigned long long cellphone;
+    double salary;
+    
+    cout <<  "Digite o nome do funcionario: ";
+    getline(cin, name);
+
+    cout <<  "Digite o celular do funcionario: ";
+    cin >> cellphone;
+    cin.ignore();
+
+    cout << "Digite o cargo do funcionario: ";
+    getline(cin, officePosition);
+
+    cout <<  "Digite o salario do funcionario: ";
+    cin >> salary;
+
+    Employee employee(name,cellphone,officePosition,salary);
+    if(employee.writeToFile(employeeFilename)){
+        cout << "Funcionario cadastrado com sucesso!\n";
+    }else{
+        cout << "Erro ao cadastrar funcionario.\n";
+    }
+    
+}
+
+void viewEmployee(const string employeeFilename){
+    int id;
+    Employee foundEmployee;
+    cout <<  "Digite o  ID do funcionario: ";
+    cin >> id;
+    if(Employee::getEmployeeById(employeeFilename,id,foundEmployee)){
+        cout << "Funcionario encontrado:\n";
+        cout << "Nome: " << foundEmployee.getName() << "\n";
+        cout << "Telefone: " << foundEmployee.getCellphone() << "\n";
+        cout << "Cargo: " << foundEmployee.getOfficePosition() << "\n";
+        cout << "Salario: " << foundEmployee.getSalary() << "\n";  
+    }else{
+        cout << "Funcionario com o ID " << id << " nao encontrado!\n";
+    }
+}
+void registerRoom(const string roomFilename){
+    int roomNum;
+    int qntGuest;
+    float dailyValue;
+    string state;
+
+    cout << endl << "Digite o numero do quarto: ";
+    cin >> roomNum;
+
+    cout << endl << "Digite a quantidade de hospedes: ";
+    cin >> qntGuest;
+
+    cout << endl << "Digite o valor da diaria: ";
+    cin >> dailyValue;
+    cin.ignore();
+
+    cout << endl << "Digite o status do quarto: ";
+    getline(cin, state);
+
+    Room room(roomNum,qntGuest,dailyValue,state);
+
+    if(room.writeToFile(roomFilename)){
+      cout << "Quarto cadastrado com sucesso!\n";
+    } else {
+      cout << "Erro ao cadastrar quarto.\n";
+    }
+}
+
+int getRoomNumber(const string& roomFilename, const string& state, int qntGuest, Room& foundRoom) {
+  if (Room::findRoom(roomFilename, state, foundRoom, qntGuest)) {
+    
+    cout << "\nQuarto numero: " << foundRoom.getRoomNum() << " esta " << foundRoom.getState();
+    cout << "\nEste quarto possui uma diaria de: " << foundRoom.getDailyValue();
+    return 1;
+  } 
+  return 0;
+    
+}
+
+bool isValidDateFormat(const string& date) { // using regex to verify the date input
+  regex dateRegex(R"(\d{2}/\d{2}/\d{4})");
+  return regex_match(date, dateRegex);
+}
+
+void registerStay(const string customerFilename, const string& roomFilename, Room& foundRoom, const string& hotelStaysFilename){
+  int id, qnt;
+  bool validInput;
+  do{
+    validInput = true;  // Reset for each loop iteration
+    string checkinDate, checkoutDate;
+    cout << endl << "\n Cadastro de estadia " ;
+    cout << endl << "---------------------" ;
+
+    cout << endl << "\nDigite o codigo do hospede: " ;
+    cin >> id;
+    cin.ignore();
+
+    // Verify if this customer is registered
+    Customer customer;
+    if((customer.findByID(customerFilename, id)).getId() != id){
+        cout << endl << "\nHospede nao encontrado!";
+        validInput = false;
+        continue;  // Skip the rest of the loop if customer is not found
+    }
+
+    cout << endl << "\nDigite a quantidade de hospedes: " ;
+    cin >> qnt;
+    cin.ignore();
+
+    cout << endl << "\nDigite a data de entrada (dd/mm/yyyy): " ;
+    getline(cin, checkinDate);
+
+    if(!isValidDateFormat(checkinDate)){
+      validInput = false;
+      cout << "\nO formato esta errado! O formato correto eh dd/mm/yyyy.\n";
+      continue;  // Skip the rest of the loop if the date format is invalid
+
+    } else {
+      cout << endl << "\nDigite a data de saida (dd/mm/yyyy): " ;
+      getline(cin, checkoutDate);
+
+      if(!isValidDateFormat(checkoutDate)){
+        validInput = false;
+        cout << "\nO formato esta errado! O formato correto eh dd/mm/yyyy.\n";
+        continue;  // Skip the rest of the loop if the date format is invalid
+
+      } else {
+        if(getRoomNumber(roomFilename, STATUS_ROOM_FREE, qnt, foundRoom)){
+          HotelStay hotelStay(checkinDate, checkoutDate, foundRoom.getDailyValue(), id, foundRoom.getRoomNum());
+
+          if(!hotelStay.calcStayValue()){
+            cout << endl << "\nA data do checkout eh menor que a data do checkin!";
+            validInput = false;
+            continue;  // Skip the rest of the loop if checkout date is earlier than checkin
+
+          } else {
+            foundRoom.setState(STATUS_ROOM_BUSY);
+            foundRoom.writeToFile(roomFilename);
+            cout << endl << "\nO valor total eh: " << hotelStay.getStayValue();
+            if(hotelStay.writeToFile(hotelStaysFilename)){
+              cout << endl << "Estadia registrada com sucesso!";
+            }
+            return;  // Exit the loop and function when registration is successful
+          }
+        } else {
+          cout << "\nNenhum quarto disponivel encontrado.";
+          validInput = false;
+        }
+      }
+    }
+  } while(!validInput);
+
+}
+
+void viewStayByClient(const string& customersFilename, const string& hotelStaysFilename){
+  int id;
+  cout << endl << "Digite o codigo do hospede: " ;
+  cin >> id;
+  cin.ignore();
+  
+  Customer c;
+  Customer foundCustomer = c.findByID(customersFilename, id);
+
+  HotelStay foundHotelStay;
+  foundHotelStay.getHotelStaysByName(hotelStaysFilename, id,foundHotelStay );
+
+  foundHotelStay.calcStayValue();
+
+  cout << "Estadia: #" << foundHotelStay.getId() << endl;
+  cout << "Hospede: " << foundCustomer.getName() << endl;
+  cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
+  cout << "Data de entrada: " << foundHotelStay.getCheckinDate() << endl;
+  cout << "Data de saida: " << foundHotelStay.getCheckoutDate() << endl;
+  cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
+  cout << "Valor da diaria: " << foundHotelStay.getQntdDaily() << endl;
+  cout << "Valor total: " << foundHotelStay.getStayValue() << endl;
+
+}
 
 #endif // INTERACTION_H
