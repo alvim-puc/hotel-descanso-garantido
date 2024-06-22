@@ -186,7 +186,9 @@ Customer Customer::findByID(const string& filename, int searchId) {
     ifstream inFile(filename, ios::binary);
     if (!inFile) {
         cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
-        return Customer();
+        Customer customer;
+        customer.setId(-1);
+        return customer;
     }
 
     Customer customer;
@@ -199,7 +201,8 @@ Customer Customer::findByID(const string& filename, int searchId) {
     }
 
     inFile.close();
-    return Customer();
+    customer.setId(-1);
+    return customer;
 }
 
 void Customer::serialize(ostream& os) const {
