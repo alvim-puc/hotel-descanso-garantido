@@ -12,7 +12,7 @@ class HotelStay{
     int  qntdDaily;
     int idClient;
     int roomNum;
-    float stayValue;
+    double stayValue;
     static int ID;
 
 
@@ -21,52 +21,94 @@ class HotelStay{
 
     HotelStay(std::string checkinDate, std::string checkoutDate, int qntdDaily, int idClient, int roomNum)
         : id(++ID), checkinDate(checkinDate), checkoutDate(checkoutDate), qntdDaily(qntdDaily), idClient(idClient), roomNum(roomNum){}
-    void setStayValue(float value){
+    void setStayValue(double value){
         stayValue = value;
     }
+
     int getId(){
         return id;
     }
+
     std::string getCheckinDate(){
         return checkinDate;
     }
+
     std::string getCheckoutDate(){
         return checkoutDate;
     }
+
     int getQntdDaily(){
         return qntdDaily;
     }
+
     int getIdClient(){
         return idClient;
     }
+
     int getRoomNum(){
         return roomNum;
     }
-    float getStayValue(){
+
+    double getStayValue(){
         return stayValue;
     }
+
     bool writeToFile(const std::string& filename) const {
         std::ofstream outFile(filename, std::ios::binary | std::ios::app);
-        if (outFile.is_open()) {
-            outFile.write(reinterpret_cast<const char*>(&id), sizeof(id));
-
-            size_t checkinDateSize = checkinDate.size();
-            outFile.write(reinterpret_cast<const char*>(&checkinDateSize), sizeof(checkinDateSize));
-            outFile.write(checkinDate.c_str(), checkinDateSize);
-
-            size_t checkoutDateSize = checkoutDate.size();
-            outFile.write(reinterpret_cast<const char*>(&checkoutDateSize), sizeof(checkoutDateSize));
-            outFile.write(checkoutDate.c_str(), checkoutDateSize);
-
-            outFile.write(reinterpret_cast<const char*>(&qntdDaily), sizeof(qntdDaily));
-            outFile.write(reinterpret_cast<const char*>(&idClient), sizeof(idClient));
-            outFile.write(reinterpret_cast<const char*>(&roomNum), sizeof(roomNum));
-
-            outFile.close();
-            return true;
+        if (!outFile.is_open()) {
+            std::cerr << "Erro ao abrir o arquivo de estadias: " << filename << std::endl;
+            return false;
         }
-        return false;
+
+        outFile.write(reinterpret_cast<const char*>(&id), sizeof(id));
+        if (!outFile) {
+            std::cerr << "Erro ao escrever o ID no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        size_t checkinDateSize = checkinDate.size();
+        outFile.write(reinterpret_cast<const char*>(&checkinDateSize), sizeof(checkinDateSize));
+        outFile.write(checkinDate.c_str(), checkinDateSize);
+        if (!outFile) {
+            std::cerr << "Erro ao escrever a data de check-in no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        size_t checkoutDateSize = checkoutDate.size();
+        outFile.write(reinterpret_cast<const char*>(&checkoutDateSize), sizeof(checkoutDateSize));
+        outFile.write(checkoutDate.c_str(), checkoutDateSize);
+        if (!outFile) {
+            std::cerr << "Erro ao escrever a data de check-out no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        outFile.write(reinterpret_cast<const char*>(&qntdDaily), sizeof(qntdDaily));
+        if (!outFile) {
+            std::cerr << "Erro ao escrever a quantidade de diárias no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        outFile.write(reinterpret_cast<const char*>(&idClient), sizeof(idClient));
+        if (!outFile) {
+            std::cerr << "Erro ao escrever o ID do cliente no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        outFile.write(reinterpret_cast<const char*>(&roomNum), sizeof(roomNum));
+        if (!outFile) {
+            std::cerr << "Erro ao escrever o número do quarto no arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        outFile.close();
+        if (!outFile) {
+            std::cerr << "Erro ao fechar o arquivo de estadias." << std::endl;
+            return false;
+        }
+
+        return true;
     }
+
     static bool getHotelStaysByName(const std::string& filename, int searchId, HotelStay& foundHotelStay){
         std::ifstream inFile(filename, std::ios::binary);
         if (inFile.is_open()) {
@@ -98,6 +140,7 @@ class HotelStay{
         }
         return false;
     }
+
     int extractDay(std::string date){
         std::stringstream ss(date);
         std::string token;
@@ -106,6 +149,7 @@ class HotelStay{
         day = std::stoi(token);
         return day;
     }
+
     int extractMonth(std::string date){
         std::stringstream ss(date);
         std::string token;
@@ -115,6 +159,7 @@ class HotelStay{
         month = std::stoi(token);
         return month;
     }
+
     int extractYear(std::string date){
         std::stringstream ss(date);
         std::string token;
@@ -125,6 +170,7 @@ class HotelStay{
         year = std::stoi(token);
         return year;
     }
+
     int daysMonth(int month){
         switch (month){
             case 1:
@@ -165,6 +211,7 @@ class HotelStay{
             break;
         }
     }
+
     bool calcStayValue(){
         std::string checkinDateStr = getCheckinDate();
         std::string checkoutDateStr = getCheckoutDate();
@@ -184,17 +231,14 @@ class HotelStay{
         int daysCheckout = dayCheckout + monthCheckout * daysMonthCheckout + yearCheckout * 365;
 
         int subDays = daysCheckout - daysCheckin;
-        std::cout<<"\nsubDays: "<<subDays;
-        std::cout<<"\ngetQntdDaily: "<<getQntdDaily();
         if(subDays<0){
             return false;
         }else{
-            float stayValue = (daysCheckout - daysCheckin)*getQntdDaily();
+            double stayValue = subDays * getQntdDaily();
             setStayValue(stayValue);
             return true;
         }
 
-        
     }
 
 };

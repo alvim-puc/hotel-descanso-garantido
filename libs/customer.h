@@ -10,6 +10,7 @@ using namespace std;
 class Customer {
 private:
     int id;
+    int points;
     string name;
     string address;
     unsigned long long cellphone;
@@ -69,7 +70,7 @@ public:
      * @param searchName Nome do cliente a ser buscado no arquivo
      * @param filename Caminho do arquivo a ser lido para buscar o cliente
      */
-    void findByName(const string& filename, const string& searchName);
+    vector<Customer> findByName(const string& filename, const string& searchName);
 
     /**
      * @brief Busca um cliente pelo ID fornecido
@@ -80,7 +81,7 @@ public:
      * @param searchId Id do cliente a ser buscado no arquivo
      * @param filename Caminho do arquivo a ser lido para buscar o cliente 
      */
-    void findByID(const string& filename, int searchId);
+    Customer findByID(const string& filename, int searchId);
 
     /**
      * @brief Serializa o objeto Customer para um fluxo de saída.
@@ -161,45 +162,44 @@ int Customer::getMaxId(const string& filename){
     return maxId;
 }
 
-void Customer::findByID(const string& filename, int searchId) {
-    ifstream inFile(filename, ios::binary);
-    if (!inFile) {
-        cerr << "Não há clientes cadastrados." << endl;
-        return;
-    }
-
-    Customer customer;
-    while (!inFile.eof()) {
-        customer.deserialize(inFile);
-        if (customer.getId() == searchId) {
-            inFile.close();
-            cout << customer << endl;
-            return;
-        }
-    }
-
-    inFile.close();
-    cout << "Cliente de ID " << searchId << " não encontrado" << endl;
-}
-
-void Customer::findByName(const string& filename, const string& searchName) {
+vector<Customer> Customer::findByName(const string& filename, const string& searchName) {
     ifstream inFile(filename, ios::binary);
     if (!inFile) {
         cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
-        return;
+        return vector<Customer>();
     }
 
+    vector<Customer> foundCustomers;
     Customer customer;
-    while (!inFile.eof()) {
+    while (inFile.peek() != EOF) {
         customer.deserialize(inFile);
         if (customer.getName() == searchName) {
-            cout << customer << endl;
-            return;
+            foundCustomers.push_back(customer);
         }
     }
 
     inFile.close();
-    cout << "Cliente chamado " << searchName << " não encontrado" << endl;
+    return foundCustomers;
+}
+
+Customer Customer::findByID(const string& filename, int searchId) {
+    ifstream inFile(filename, ios::binary);
+    if (!inFile) {
+        cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
+        return Customer();
+    }
+
+    Customer customer;
+    while (inFile.peek() != EOF) {
+        customer.deserialize(inFile);
+        if (customer.getId() == searchId) {
+            inFile.close();
+            return customer;
+        }
+    }
+
+    inFile.close();
+    return Customer();
 }
 
 void Customer::serialize(ostream& os) const {
@@ -238,6 +238,7 @@ ostream& operator<<(ostream& os, const Customer& customer) {
     os << "Nome: " << customer.name << endl;
     os << "Endereco: " << customer.address << endl;
     os << "Telefone: " << customer.cellphone << endl;
+    os << "Pontos: " << customer.points << endl; 
     return os;
 }
 
