@@ -42,6 +42,7 @@ hotel-descanso-garantido/
     <th>Início</th>
     <th>Término</th>
     <th>Backlog</th>
+    <th>Responsáveis</th>
   </tr>
   <tr>
     <td>1</td>
@@ -52,6 +53,13 @@ hotel-descanso-garantido/
         <li>RF 01</li>
         <li>RF 02</li>
         <li>RF 07</li>
+      </ul>
+    </td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li>Bernardo</li>
+        <li>Bruna</li>
+        <li>Bernardo e Bruna</li>
       </ul>
     </td>
   </tr>
@@ -67,12 +75,21 @@ hotel-descanso-garantido/
         <li>RF 06</li>
       </ul>
     </td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li>Bruna</li>
+        <li>Bernardo e Bruna</li>
+        <li>Bruna e Matheus</li>
+        <li>Metheus</li>
+      </ul>
+    </td>
   </tr>
   <tr>
     <td>3</td>
     <td>22/06</td>
     <td>23/06</td>
     <td>Testes</td>
+    <td>Matheus</td>
   </tr>
 </table>
 
@@ -121,6 +138,43 @@ g++ main.cpp -o output
 ```
 
 ## Testes
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Escopo</th>
+    <th>Entrada</th>
+    <th>Saída esperada</th>
+    <th>Status</th>
+  </tr>
+  <tr>
+    <td>#1</td>
+    <td>Cadastro de cliente</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>Nome: </strong> Alvim</li>
+        <li><strong>Endereço: </strong> Rua das Dores, 444</li>
+        <li><strong>Telefone: </strong> 3196289</li>
+      </ul>
+    </td>
+    <td>Cliente cadastrado com sucesso!</td>
+    <td>Aprovado</td>
+  </tr>
+  <tr>
+    <td>#2</td>
+    <td>Cadastro de funcionário</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>Nome: </strong> Markowisk</li>
+        <li><strong>Telefone: </strong> 31928393</li>
+        <li><strong>Cargo: </strong> Supervisora</li>
+        <li><strong>Salário: </strong> 2000</li>
+      </ul>
+    </td>
+    <td>Funcionário cadastrado com sucesso!</td>
+    <td>Aprovado</td>
+  </tr>
+</table>
 
 ## Utilização
 

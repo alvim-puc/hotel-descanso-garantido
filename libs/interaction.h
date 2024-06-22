@@ -81,6 +81,10 @@ void searchCustomer(Customer& C, const string& path) {
       fflush(stdin);
 
       Customer customer = C.findByID(path, id);
+      if (customer.getId() == -1){
+        cout << "Cliente nao encontrado.\n";
+        return;
+      }
 
       cout << customer << endl;
 
@@ -265,6 +269,11 @@ void viewStayByClient(const string& customersFilename, const string& hotelStaysF
   
   Customer c;
   Customer foundCustomer = c.findByID(customersFilename, id);
+  if (foundCustomer.getId() == -1) {
+    cout << endl << "Hospede nao encontrado!";
+    return;
+  }
+
 
   HotelStay foundHotelStay;
   foundHotelStay.getHotelStaysByName(hotelStaysFilename, id,foundHotelStay );

@@ -71,10 +71,10 @@ int main(){
             case 4:
                 registerStay(CustomerFilename, roomFilename, foundRoom, hotelStaysFilename);
                 break;
-            case 6:
+            case 5:
                 searchCustomer(C, CustomerFilename);
                 break;
-            case 7:
+            case 6:
                 viewEmployee(employeeFilename);
                 break;
             case 8:
