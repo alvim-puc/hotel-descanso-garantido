@@ -22,6 +22,10 @@ public:
         id = size;
     }
 
+    void setPoints(int value) {
+        points = value;
+    }
+
     void setName(string value) {
         name = value;
     }
@@ -36,6 +40,10 @@ public:
 
     int getId() const {
         return id;
+    }
+
+    const int getPoints() const {
+        return points;
     }
 
     const string& getName() const {
@@ -60,6 +68,18 @@ public:
      * @return quantidade de clientes presente no arquivo, ou seja, o valor máximo de todos os Ids
      */
     int getMaxId(const string& filename);
+
+    /**
+     * @brief Verifica se já existe um cliente cadastrado com esse telefone
+     * 
+     * Percorre todo o arquivo instanciando users e comparando com o anterior o Telefone.
+     * Após percorrer tudo, retorna se o telefone foi encontrado ou não.
+     * 
+     * @param filename 
+     * @param cellphone 
+     * @return bool 
+     */
+    bool isCellNumberRegistered(const string& filename, unsigned long long cellphone);
 
     /**
      * @brief Busca cliente pelo Nome
@@ -162,6 +182,26 @@ int Customer::getMaxId(const string& filename){
     return maxId;
 }
 
+bool Customer::isCellNumberRegistered(const string& filename, unsigned long long searchCellphone) {
+    ifstream inFile(filename, ios::binary);
+    if (!inFile) {
+        cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
+        return false;
+    }
+
+    Customer customer;
+    while (inFile.peek() != EOF) {
+        customer.deserialize(inFile);
+        if (customer.getCellphone() == searchCellphone) {
+            inFile.close();
+            return true;
+        }
+    }
+
+    inFile.close();
+    return false;
+}
+
 vector<Customer> Customer::findByName(const string& filename, const string& searchName) {
     ifstream inFile(filename, ios::binary);
     if (!inFile) {
@@ -218,6 +258,7 @@ void Customer::serialize(ostream& os) const {
     os.write(address.c_str(), addressSize);
 
     os.write(reinterpret_cast<const char*>(&cellphone), sizeof(cellphone));
+    os.write(reinterpret_cast<const char*>(&points), sizeof(points));
 }
 
 void Customer::deserialize(istream& is) {
@@ -234,6 +275,7 @@ void Customer::deserialize(istream& is) {
     is.read(&address[0], addressSize);
 
     is.read(reinterpret_cast<char*>(&cellphone), sizeof(cellphone));
+    is.read(reinterpret_cast<char*>(&points), sizeof(points));
 }
 
 ostream& operator<<(ostream& os, const Customer& customer) {
