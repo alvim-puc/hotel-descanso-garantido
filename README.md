@@ -80,7 +80,7 @@ hotel-descanso-garantido/
         <li>Bruna</li>
         <li>Bernardo e Bruna</li>
         <li>Bruna e Matheus</li>
-        <li>Metheus</li>
+        <li>Matheus</li>
       </ul>
     </td>
   </tr>
