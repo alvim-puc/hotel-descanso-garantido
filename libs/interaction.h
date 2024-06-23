@@ -454,6 +454,7 @@ int calcStayedDays(HotelStay hotelStay){
   return daysCheckout - daysCheckin;
 }
 
+
 void checkoutStay(const string& hotelStaysFilename, const string& roomFilename, int stayId) {
     string tempFilename = "data/temp_stays.dat";
 

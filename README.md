@@ -80,7 +80,7 @@ hotel-descanso-garantido/
         <li>Bruna</li>
         <li>Bernardo e Bruna</li>
         <li>Bruna e Matheus</li>
-        <li>Metheus</li>
+        <li>Matheus</li>
       </ul>
     </td>
   </tr>
@@ -134,7 +134,7 @@ Para compilar o programa, abra o diretório do projeto e insira os seguintes com
 ```sh
 cd hotel-descanso-garantido/
 g++ main.cpp -o output
-.\output\
+./output
 ```
 
 ## Testes
