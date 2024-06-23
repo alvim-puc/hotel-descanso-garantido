@@ -29,20 +29,34 @@ void clr(){
 void registerCustomer(const string& filename) {
     unsigned long long cellphone;
     string name, address;
+    Customer customer;
 
     cout << endl << "Cadastro de Cliente " << endl;
-    cout << endl << "Digite o nome do cliente: ";
+    cout << "Digite o nome do cliente: ";
     getline(cin, name);
 
-    cout << endl << "Digite o endereco: ";
+    cout << "Digite o endereco: ";
     getline(cin, address);
 
-    cout << endl << "Digite o telefone: ";
+    cout << "Digite o telefone: ";
     cin >> cellphone;
-    fflush(stdin); // Limpa o buffer
+    cin.ignore();
 
-    // Cria um cliente e insere na classe seus dados;
-    Customer customer;
+    // Verifica se o número já está cadastrado
+    if(customer.isCellNumberRegistered(filename, cellphone)){
+      cout << "Este telefone ja esta cadastrado." << endl;
+      bool repeat = true;
+      do
+      {
+        cout << endl << "Digite o telefone: ";
+        cin >> cellphone;
+        cin.ignore();
+        repeat = customer.isCellNumberRegistered(filename, cellphone);
+      } while (repeat);
+    }
+
+    // insere na classe Cliente os dados do cliente;
+    customer.setPoints(0);
     customer.setName(name);
     customer.setAddress(address);
     customer.setCellphone(cellphone);
@@ -152,9 +166,15 @@ void registerRoom(const string roomFilename){
     int qntGuest;
     float dailyValue;
     string state;
+    Room room;
 
     cout << endl << "Digite o numero do quarto: ";
     cin >> roomNum;
+
+    if(room.isRoomNumberRegistered(roomFilename, roomNum)) {
+      cout << "Este quarto ja esta existe.\n";
+      return;
+    }
 
     cout << endl << "Digite a quantidade de hospedes: ";
     cin >> qntGuest;
@@ -163,10 +183,10 @@ void registerRoom(const string roomFilename){
     cin >> dailyValue;
     cin.ignore();
 
-    cout << endl << "Digite o status do quarto: ";
-    getline(cin, state);
-
-    Room room(roomNum,qntGuest,dailyValue,state);
+    room.setRoomNum(roomNum);
+    room.setQntGuest(qntGuest);
+    room.setDailyValue(dailyValue);
+    room.setState(STATUS_ROOM_FREE);
 
     if(room.writeToFile(roomFilename)){
       cout << "Quarto cadastrado com sucesso!\n";

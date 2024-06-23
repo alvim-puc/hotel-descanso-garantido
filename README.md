@@ -174,6 +174,67 @@ g++ main.cpp -o output
     <td>Funcionário cadastrado com sucesso!</td>
     <td>Aprovado</td>
   </tr>
+  <tr>
+    <td>#3</td>
+    <td>Cadastro de quarto</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>Número: </strong> 505</li>
+        <li><strong>Quantidade de Hóspedes: </strong> 2</li>
+        <li><strong>Diária: </strong> 250</li>
+      </ul>
+    </td>
+    <td>Quarto cadastrado com sucesso!</td>
+    <td>Aprovado</td>
+  </tr>
+  <tr>
+    <td>#4</td>
+    <td>Cadastro de quarto já existente</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>Número: </strong> 505 (Número do quarto cadastrado no teste #3)</li>
+        <li>A função é parada porque o número do quarto já existe</li>
+      </ul>
+    </td>
+    <td>Este quarto já existe.</td>
+    <td>Aprovado</td>
+  </tr>
+  <tr>
+    <td>#5</td>
+    <td>Pesquisar cliente por código</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>ID do cliente: </strong> < ID do cliente cadastrado no teste #1 ></li>
+      </ul>
+    </td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>ID: </strong> < Código do cliente cadastrado no teste #1 ></li>
+        <li><strong>Nome: </strong> Alvim</li>
+        <li><strong>Endereço: </strong> Rua das Dores, 444</li>
+        <li><strong>Telefone: </strong> 3196289</li>
+      </ul>
+    </td>
+    <td>Aprovado</td>
+  </tr>
+  <tr>
+    <td>#6</td>
+    <td>Pesquisar cliente por nome</td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>Nome: </strong> Alvim</li>
+      </ul>
+    </td>
+    <td>
+      <ul style="list-style: none; padding: 0;">
+        <li><strong>ID: </strong> < Código do cliente cadastrado no teste #1 ></li>
+        <li><strong>Nome: </strong> Alvim</li>
+        <li><strong>Endereço: </strong> Rua das Dores, 444</li>
+        <li><strong>Telefone: </strong> 3196289</li>
+      </ul>
+    </td>
+    <td>Aprovado</td>
+  </tr>
 </table>
 
 ## Utilização
