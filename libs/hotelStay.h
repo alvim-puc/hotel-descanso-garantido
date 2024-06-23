@@ -109,7 +109,40 @@ class HotelStay{
         return true;
     }
 
-    static bool getHotelStaysByName(const std::string& filename, int searchId, HotelStay& foundHotelStay){
+    bool readFromFile(std::ifstream& inFile) {
+        // Leitura dos dados do arquivo binário para a classe HotelStay
+        inFile.read(reinterpret_cast<char*>(&id), sizeof(id));
+        if (!inFile) return false;
+
+        int checkinDateSize;
+        inFile.read(reinterpret_cast<char*>(&checkinDateSize), sizeof(checkinDateSize));
+        if (!inFile) return false;
+
+        checkinDate.resize(checkinDateSize);
+        inFile.read(&checkinDate[0], checkinDateSize);
+        if (!inFile) return false;
+
+        int checkoutDateSize;
+        inFile.read(reinterpret_cast<char*>(&checkoutDateSize), sizeof(checkoutDateSize));
+        if (!inFile) return false;
+        
+        checkoutDate.resize(checkoutDateSize);
+        inFile.read(&checkoutDate[0], checkoutDateSize);
+        if (!inFile) return false;
+
+        inFile.read(reinterpret_cast<char*>(&qntdDaily), sizeof(qntdDaily));
+        if (!inFile) return false;
+
+        inFile.read(reinterpret_cast<char*>(&idClient), sizeof(idClient));
+        if (!inFile) return false;
+
+        inFile.read(reinterpret_cast<char*>(&roomNum), sizeof(roomNum));
+        if (!inFile) return false;
+
+        return true;
+    }
+
+    static bool getHotelStaysByCustomer(const std::string& filename, int searchId, HotelStay& foundHotelStay){
         std::ifstream inFile(filename, std::ios::binary);
         if (inFile.is_open()) {
             while (true) {

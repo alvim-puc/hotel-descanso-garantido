@@ -67,6 +67,27 @@ public:
         return false;
     }
 
+    bool readFromFile(std::ifstream& inFile) {
+        inFile.read(reinterpret_cast<char*>(&roomNum), sizeof(roomNum));
+        if (!inFile) return false;
+
+        inFile.read(reinterpret_cast<char*>(&qntGuest), sizeof(qntGuest));
+        if (!inFile) return false;
+
+        inFile.read(reinterpret_cast<char*>(&dailyValue), sizeof(dailyValue));
+        if (!inFile) return false;
+
+        size_t stateSize;
+        inFile.read(reinterpret_cast<char*>(&stateSize), sizeof(stateSize));
+        if (!inFile) return false;
+
+        state.resize(stateSize);
+        inFile.read(&state[0], stateSize);
+        if (!inFile) return false;
+
+        return true;
+    }
+
     static std::string toLowerCase(const std::string& str) {
         std::string result = str;
         std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return std::tolower(c); });

@@ -15,7 +15,7 @@ void menu(int* choice){
     cout << "----------------------------------------------------------" << endl;
     cout << "                          MENU                            " << endl;
     cout << "----------------------------------------------------------" << endl;
-    cout << endl << "Digite 0 para encerrar o porgrama";
+    cout << endl << "Digite 0 para encerrar o programa";
     cout << endl << "Digite 1 para cadastrar um cliente";
     cout << endl << "Digite 2 para cadastrar um funcionario";
     cout << endl << "Digite 3 para cadastrar um quarto";
@@ -53,7 +53,6 @@ int main(){
     string clientFilename = "data/customers.dat";
     string hotelStaysFilename = "data/hotelStays.dat";
     string CustomerFilename = "data/customers.dat";
-    Customer C;
 
     int choice;
     do{
@@ -72,13 +71,23 @@ int main(){
                 registerStay(CustomerFilename, roomFilename, foundRoom, hotelStaysFilename);
                 break;
             case 5:
-                searchCustomer(C, CustomerFilename);
+                searchCustomer(CustomerFilename);
                 break;
             case 6:
                 viewEmployee(employeeFilename);
                 break;
+            case 7:
+                listRooms(roomFilename);
+                break;
             case 8:
-                viewStayByClient(clientFilename,hotelStaysFilename);
+                viewStayByCustomer(clientFilename,hotelStaysFilename);
+                break;
+            case 9:
+                int id;
+                cout << "Digite o ID da estadia: " << endl;
+                cin >> id;
+                cin.ignore();
+                checkoutStay(hotelStaysFilename, roomFilename, id);
                 break;
             case 0:
                 printf("Obrigado por usar nosso sistema, Ate mais!");
