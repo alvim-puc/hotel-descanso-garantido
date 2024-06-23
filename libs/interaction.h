@@ -26,6 +26,11 @@ void clr(){
   #endif
 }
 
+static string toLowerCase(const string& str) {
+  string result = str;
+  transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return tolower(c); });
+  return result;
+}
 
 void registerCustomer(const string& filename) {
     unsigned long long cellphone;
@@ -35,6 +40,8 @@ void registerCustomer(const string& filename) {
     cout << endl << "Cadastro de Cliente " << endl;
     cout << "Digite o nome do cliente: ";
     getline(cin, name);
+
+    name = toLowerCase(name);
 
     cout << "Digite o endereco: ";
     getline(cin, address);
@@ -87,7 +94,7 @@ void registerCustomer(const string& filename) {
 //     return false;
 //   }
 
-//   string tempFilename = "data/temp.dat"; // caminho do arquivo temporário
+//   string tempFilename = "data/temp_customers.dat"; // caminho do arquivo temporário
 //   ofstream tempFile(tempFilename, ios::binary | ios::app);
 //   if (!tempFile.is_open()) {
 //     cerr << "Error creating temporary file." << endl;
@@ -154,6 +161,8 @@ void searchCustomer(const string& path) {
       cout << "Digite o nome do cliente: ";
       getline(cin, name);
 
+      name = toLowerCase(name);
+
       vector <Customer> customers = C.findByName(path, name);
 
       for (Customer customer : customers) {
@@ -161,7 +170,7 @@ void searchCustomer(const string& path) {
       }
 
     } else {
-        cout << "Opção inválida. Tente novamente.\n";
+      cout << "Opção inválida. Tente novamente.\n";
     }
 }
 
@@ -251,7 +260,7 @@ bool updateRoomStatus(const string& roomFilename, int roomNum, const string& new
       return false;
     }
 
-    string tempFilename = "data/temp.dat"; // caminho do arquivo temporário
+    string tempFilename = "data/temp_rooms.dat"; // caminho do arquivo temporário
     ofstream tempFile(tempFilename, ios::binary | ios::app);
     if (!tempFile.is_open()) {
       cerr << "Error creating temporary file." << endl;
@@ -334,7 +343,7 @@ void listRooms(const string& roomFilename) {
 
   inFile.close();
 
-  cout << "List of Rooms:" << endl;
+  cout << "Lista de Quartos:" << endl;
   for (const auto& r : rooms) {
     cout << "-----------------------------" << endl;
     cout << "Numero: " << r.getRoomNum() << endl;
@@ -422,7 +431,7 @@ void registerStay(const string customerFilename, const string& roomFilename, Roo
 }
 
 void checkoutStay(const string& hotelStaysFilename, const string& roomFilename, int stayId) {
-    string tempFilename = "data/temp.dat";
+    string tempFilename = "data/temp_stays.dat";
 
     ifstream inFile(hotelStaysFilename, ios::binary);
     if (!inFile.is_open()) {
@@ -478,9 +487,11 @@ void viewStayByCustomer(const string& customersFilename, const string& hotelStay
     return;
   }
 
-
   HotelStay foundHotelStay;
-  foundHotelStay.getHotelStaysByCustomer(hotelStaysFilename, id,foundHotelStay );
+  if(!foundHotelStay.getHotelStaysByCustomer(hotelStaysFilename, id,foundHotelStay)){
+    cout << endl << "Os hospede nao possui estadias.";
+    return;
+  }
 
   foundHotelStay.calcStayValue();
 

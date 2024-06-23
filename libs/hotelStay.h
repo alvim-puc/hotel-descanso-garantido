@@ -167,6 +167,9 @@ class HotelStay{
                 if (foundHotelStay.getId() == searchId) {
                     inFile.close();
                     return true;
+                } else{
+                    inFile.close();
+                    return false;
                 }
             }
             inFile.close();
