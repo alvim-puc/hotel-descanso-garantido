@@ -86,48 +86,51 @@ void registerCustomer(const string& filename) {
     cout << "Cliente cadastrado com sucesso!" << endl;
 }
 
-// bool calcCustomerPoints(int dayStayeds) {
-//   string customerFilename = "data/customer.dat";
-//   ifstream inFile('data/customer.dat', ios::binary);
-//   if (!inFile.is_open()) {
-//     cerr << "Error opening file: " << customerFilename << endl;
-//     return false;
-//   }
+bool calcCustomerPoints(int dayStayeds, int ClientId) {
+  string customerFilename = "data/customers.dat";
+  ifstream inFile("data/customers.dat", ios::binary);
+  if (!inFile.is_open()) {
+    cerr << "Error opening file: " << customerFilename << endl;
+    return false;
+  }
 
-//   string tempFilename = "data/temp_customers.dat"; // caminho do arquivo temporário
-//   ofstream tempFile(tempFilename, ios::binary | ios::app);
-//   if (!tempFile.is_open()) {
-//     cerr << "Error creating temporary file." << endl;
-//     inFile.close();
-//     return false;
-//   }
+  string tempFilename = "data/temp_customers.dat"; // caminho do arquivo temporário
+  ofstream tempFile(tempFilename, ios::binary | ios::app);
+  if (!tempFile.is_open()) {
+    cerr << "Error creating temporary file." << endl;
+    inFile.close();
+    return false;
+  }
 
-//   Customer customer;
-//   bool customerFound = false;
+  Customer customer;
+  bool customerFound = false;
 
-//   while (customer.deserialize(inFile)) {
-//     if (customer.getRoomNum() == roomNum) {
-//       customer.setState(newStatus);
-//       customerFound = true;
-//     }
-//     customer.serialize(tempFile);
-//   }
+  while (true) {
+    if(inFile.eof()) break;
 
-//   inFile.close();
-//   tempFile.close();
+    customer.deserialize(inFile);
+    if (customer.getId() == ClientId) {
+      customer.setPoints(customer.getPoints() + (dayStayeds * 10));
+      customerFound = true;
+    }
+    customer.serialize(tempFile);
+  }
 
-//   if (customerFound) {
-//     // Remove o arquivo original e renomeia o temporário
-//     remove(customerFilename.c_str());
-//     rename(tempFilename.c_str(), customerFilename.c_str());
-//     cout << "Status do quarto atualizado com sucesso!" << endl;
-//     return true;
-//   } else {
-//     remove(tempFilename.c_str()); // Remove o arquivo temporário se nenhum quarto foi encontrado
-//     cout << "Quarto com número " << customerNum << " não encontrado." << endl;
-//     return false;
-//   }
-// }
+  inFile.close();
+  tempFile.close();
+
+  if (customerFound) {
+    // Remove o arquivo original e renomeia o temporário
+    remove(customerFilename.c_str());
+    rename(tempFilename.c_str(), customerFilename.c_str());
+    cout << "Pontos do cliente atualizados com sucesso!" << endl;
+    return true;
+  } else {
+    remove(tempFilename.c_str()); // Remove o arquivo temporário se nenhum cliente foi encontrado
+    cout << "Cliente com codigo " << ClientId << " não encontrado." << endl;
+    return false;
+  }
+}
 
 void searchCustomer(const string& path) {
     int option;
@@ -286,7 +289,7 @@ bool updateRoomStatus(const string& roomFilename, int roomNum, const string& new
       // Remove o arquivo original e renomeia o temporário
       remove(roomFilename.c_str());
       rename(tempFilename.c_str(), roomFilename.c_str());
-      cout << "Status do quarto atualizado com sucesso!" << endl;
+      cout << endl << "Status do quarto atualizado com sucesso!" << endl;
       return true;
     } else {
       remove(tempFilename.c_str()); // Remove o arquivo temporário se nenhum quarto foi encontrado
@@ -430,6 +433,27 @@ void registerStay(const string customerFilename, const string& roomFilename, Roo
 
 }
 
+int calcStayedDays(HotelStay hotelStay){
+  std::string checkinDateStr = hotelStay.getCheckinDate();
+  std::string checkoutDateStr = hotelStay.getCheckoutDate();
+
+  int dayCheckin = hotelStay.extractDay(checkinDateStr);
+  int monthCheckin = hotelStay.extractMonth(checkinDateStr);
+  int yearCheckin = hotelStay.extractYear(checkinDateStr);
+
+  int dayCheckout = hotelStay.extractDay(checkoutDateStr);
+  int monthCheckout = hotelStay.extractMonth(checkoutDateStr);
+  int yearCheckout = hotelStay.extractYear(checkoutDateStr);
+
+  int daysMonthCheckin = hotelStay.daysMonth(monthCheckin);
+  int daysMonthCheckout = hotelStay.daysMonth(monthCheckout);
+
+  int daysCheckin = dayCheckin + monthCheckin * daysMonthCheckin + yearCheckin * 365; 
+  int daysCheckout = dayCheckout + monthCheckout * daysMonthCheckout + yearCheckout * 365;
+
+  return daysCheckout - daysCheckin;
+}
+
 void checkoutStay(const string& hotelStaysFilename, const string& roomFilename, int stayId) {
     string tempFilename = "data/temp_stays.dat";
 
@@ -466,7 +490,7 @@ void checkoutStay(const string& hotelStaysFilename, const string& roomFilename, 
     if (stayFound) {
         remove(hotelStaysFilename.c_str());
         rename(tempFilename.c_str(), hotelStaysFilename.c_str());
-        //calcCustomerPoints((hotelStay.getStayValue() / hotelStay.getQntdDaily()));
+        calcCustomerPoints(calcStayedDays(hotelStay), hotelStay.getIdClient());
         cout << "Estadia encerrada com sucesso e quarto desocupado." << endl;
     } else {
         remove(tempFilename.c_str());
@@ -495,7 +519,7 @@ void viewStayByCustomer(const string& customersFilename, const string& hotelStay
 
   foundHotelStay.calcStayValue();
 
-  cout << "Estadia: #" << foundHotelStay.getId() << endl;
+  cout << "Estadia #" << foundHotelStay.getId() << endl;
   cout << "Hospede: " << foundCustomer.getName() << endl;
   cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
   cout << "Data de entrada: " << foundHotelStay.getCheckinDate() << endl;
