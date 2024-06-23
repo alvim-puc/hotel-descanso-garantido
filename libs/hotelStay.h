@@ -146,7 +146,7 @@ class HotelStay{
         std::ifstream inFile(filename, std::ios::binary);
         if (inFile.is_open()) {
             while (true) {
-                 inFile.read(reinterpret_cast<char*>(&foundHotelStay.id), sizeof(foundHotelStay.id));
+                inFile.read(reinterpret_cast<char*>(&foundHotelStay.id), sizeof(foundHotelStay.id));
                 if (inFile.eof()) break;
 
                 size_t checkinDateSize;
@@ -164,12 +164,9 @@ class HotelStay{
                 inFile.read(reinterpret_cast<char*>(&foundHotelStay.roomNum), sizeof(foundHotelStay.roomNum));
 
 
-                if (foundHotelStay.getId() == searchId) {
+                if (foundHotelStay.getIdClient() == searchId) {
                     inFile.close();
                     return true;
-                } else{
-                    inFile.close();
-                    return false;
                 }
             }
             inFile.close();
