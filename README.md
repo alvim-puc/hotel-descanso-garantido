@@ -134,7 +134,7 @@ Para compilar o programa, abra o diretório do projeto e insira os seguintes com
 ```sh
 cd hotel-descanso-garantido/
 g++ main.cpp -o output
-.\output\
+./output
 ```
 
 ## Testes
