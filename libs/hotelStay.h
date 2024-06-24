@@ -142,8 +142,9 @@ class HotelStay{
         return true;
     }
 
-    static bool getHotelStaysByCustomer(const std::string& filename, int searchId, HotelStay& foundHotelStay){
+    static void getHotelStaysByCustomer(const std::string& filename, int searchId, HotelStay& foundHotelStay, Customer foundCustomer){
         std::ifstream inFile(filename, std::ios::binary);
+        bool found = false;
         if (inFile.is_open()) {
             while (true) {
                 inFile.read(reinterpret_cast<char*>(&foundHotelStay.id), sizeof(foundHotelStay.id));
@@ -165,13 +166,21 @@ class HotelStay{
 
 
                 if (foundHotelStay.getIdClient() == searchId) {
-                    inFile.close();
-                    return true;
+                    found = true;
+                    cout << endl << "-----------------------------" << endl;
+                    cout << "Estadia #" << foundHotelStay.getId() << endl;
+                    cout << "Hospede: " << foundCustomer.getName() << endl;
+                    cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
+                    cout << "Data de entrada: " << foundHotelStay.getCheckinDate() << endl;
+                    cout << "Data de saida: " << foundHotelStay.getCheckoutDate() << endl;
+                    cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
+                    cout << "Valor da diaria: " << foundHotelStay.getQntdDaily() << endl;
+                    cout << "Valor total: " << foundHotelStay.getStayValue() << endl;
                 }
             }
             inFile.close();
         }
-        return false;
+        if (!found) cout << endl << "Hospede nao possui estadias.";
     }
 
     int extractDay(std::string date){

@@ -83,11 +83,7 @@ int main(){
                 viewStayByCustomer(clientFilename,hotelStaysFilename);
                 break;
             case 9:
-                int id;
-                cout << "Digite o ID da estadia: " << endl;
-                cin >> id;
-                cin.ignore();
-                checkoutStay(hotelStaysFilename, roomFilename, id);
+                checkoutStay(hotelStaysFilename, roomFilename);
                 break;
             case 0:
                 printf("Obrigado por usar nosso sistema, Ate mais!");
