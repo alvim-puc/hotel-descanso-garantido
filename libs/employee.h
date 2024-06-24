@@ -213,7 +213,7 @@ private:
 
 
     friend ostream& operator<<(ostream& os, const Employee& employee) {
-        os << "ID: " << employee.id << endl;
+        os << "Codigo: " << employee.id << endl;
         os << "Nome: " << employee.name << endl;
         os << "Telefone: " << employee.cellphone << endl;
         os << "Cargo: " << employee.officePosition << endl;

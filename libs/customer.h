@@ -279,7 +279,7 @@ void Customer::deserialize(istream& is) {
 }
 
 ostream& operator<<(ostream& os, const Customer& customer) {
-    os << "ID: " << customer.id << endl;
+    os << "Codigo: " << customer.id << endl;
     os << "Nome: " << customer.name << endl;
     os << "Endereco: " << customer.address << endl;
     os << "Telefone: " << customer.cellphone << endl;

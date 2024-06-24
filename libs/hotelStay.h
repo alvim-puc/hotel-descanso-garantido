@@ -167,13 +167,13 @@ class HotelStay{
 
                 if (foundHotelStay.getIdClient() == searchId) {
                     found = true;
+                    foundHotelStay.calcStayValue();
                     cout << endl << "-----------------------------" << endl;
                     cout << "Estadia #" << foundHotelStay.getId() << endl;
                     cout << "Hospede: " << foundCustomer.getName() << endl;
                     cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
                     cout << "Data de entrada: " << foundHotelStay.getCheckinDate() << endl;
                     cout << "Data de saida: " << foundHotelStay.getCheckoutDate() << endl;
-                    cout << "Quarto: " << foundHotelStay.getRoomNum() << endl;
                     cout << "Valor da diaria: " << foundHotelStay.getQntdDaily() << endl;
                     cout << "Valor total: " << foundHotelStay.getStayValue() << endl;
                 }

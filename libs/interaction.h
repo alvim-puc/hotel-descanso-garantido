@@ -213,6 +213,19 @@ void registerEmployee(const string& employeeFilename) {
   cin >> cellphone;
   cin.ignore();
 
+  // Verifica se o número já está cadastrado
+  if(employee.isCellNumberRegistered(employeeFilename, cellphone)){
+    cout << "Este telefone ja esta cadastrado." << endl;
+    bool repeat = true;
+    do
+    {
+      cout << endl << "Digite o telefone: ";
+      cin >> cellphone;
+      cin.ignore();
+      repeat = employee.isCellNumberRegistered(employeeFilename, cellphone);
+    } while (repeat);
+  }
+
   cout << "Digite o salario: ";
   cin >> salary;
   cin.ignore();
@@ -364,7 +377,6 @@ bool updateRoomStatus(const string& roomFilename, int roomNum, const string& new
       // Remove o arquivo original e renomeia o temporário
       remove(roomFilename.c_str());
       rename(tempFilename.c_str(), roomFilename.c_str());
-      cout << endl << "Status do quarto atualizado com sucesso!" << endl;
       cout << endl << "Status do quarto atualizado com sucesso!" << endl;
       return true;
     } else {
@@ -542,9 +554,8 @@ void checkoutStay(const string& hotelStaysFilename, const string& roomFilename) 
     cout << "                  Encerrar de Estadia                     " << endl;
     cout << "----------------------------------------------------------" << endl;
 
-    int id;
     cout << "Digite o ID da estadia: ";
-    cin >> id;
+    cin >> stayId;
     cin.ignore();
 
     ifstream inFile(hotelStaysFilename, ios::binary);
@@ -581,11 +592,10 @@ void checkoutStay(const string& hotelStaysFilename, const string& roomFilename) 
         remove(hotelStaysFilename.c_str());
         rename(tempFilename.c_str(), hotelStaysFilename.c_str());
         calcCustomerPoints(calcStayedDays(hotelStay), hotelStay.getIdClient());
-        calcCustomerPoints(calcStayedDays(hotelStay), hotelStay.getIdClient());
         cout << "Estadia encerrada com sucesso e quarto desocupado." << endl;
     } else {
         remove(tempFilename.c_str());
-        cout << "Estadia com ID " << stayId << " não encontrada." << endl;
+        cout << "Estadia com ID " << stayId << " nao encontrada." << endl;
     }
 }
 
