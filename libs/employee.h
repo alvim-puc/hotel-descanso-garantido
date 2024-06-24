@@ -20,81 +20,133 @@ private:
     static int ID;
 
     public:
-    Employee() : id(0), name(""), cellphone(0), officePosition(""), salary(0.0) {} //Default constructor
+    Employee() {} // Default constructor
 
-    Employee(string name, unsigned long long cellphone, string officePosition, int salary)
-        : id(++ID), name(name), cellphone(cellphone), officePosition(officePosition), salary(salary){}
-    int getId(){
+    Employee(string name, unsigned long long cellphone, string officePosition, double salary)
+        : id(0), name(name), cellphone(cellphone), officePosition(officePosition), salary(salary) {}
+
+    int getId() const {
         return id;
     }
-    string getName(){
+
+    string getName() const {
         return name;
     }
 
     unsigned long long getCellphone() const {
         return cellphone;
     }
-    string getOfficePosition(){
+
+    string getOfficePosition() const {
         return officePosition;
     }
 
     double getSalary() const {
         return salary;
     }
-    bool writeToFile(const string& filename) const{
-        ofstream outFile(filename, ios::binary | ios::app);
-            if(outFile.is_open()){
-                outFile.write(reinterpret_cast<const char*>(&id), sizeof(id));
 
-                size_t nameSize = name.size();
-                outFile.write(reinterpret_cast<const char*>(&nameSize), sizeof(nameSize));
-                outFile.write(name.c_str(), nameSize);
-
-                outFile.write(reinterpret_cast<const char*>(&cellphone), sizeof(cellphone));
-
-                size_t officePositionSize = officePosition.size();
-                outFile.write(reinterpret_cast<const char*>(&officePositionSize), sizeof(officePositionSize));
-                outFile.write(officePosition.c_str(), officePositionSize);
-
-                outFile.write(reinterpret_cast<const char*>(&salary), sizeof(salary));
-                
-                outFile.close();
-                return true;
-                
-            }
-        return false;
+    void setId(int value) {
+        id = value;
     }
-    static bool getEmployeeById(const string& filename, int searchId, Employee& foundEmployee){
+
+    void setName(string value) {
+        name = value;
+    }
+
+    void setCellphone(unsigned long long value) {
+        cellphone = value;
+    }
+
+    void setOfficePosition(string value) {
+        officePosition = value;
+    }
+
+    void setSalary(double value) {
+        salary = value;
+    }
+
+    
+    static int getMaxId(const string& filename) {
         ifstream inFile(filename, ios::binary);
-        if (inFile.is_open()) {
-            while (true) {
-                 inFile.read(reinterpret_cast<char*>(&foundEmployee.id), sizeof(foundEmployee.id));
-                if (inFile.eof()) break;
-
-                size_t nameSize;
-                inFile.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
-                foundEmployee.name.resize(nameSize);
-                inFile.read(reinterpret_cast<char*>(&foundEmployee.name[0]), nameSize);
-
-                inFile.read(reinterpret_cast<char*>(&foundEmployee.cellphone), sizeof(foundEmployee.cellphone));
-
-                size_t officePositionSize;
-                inFile.read(reinterpret_cast<char*>(&officePositionSize), sizeof(officePositionSize));
-                foundEmployee.officePosition.resize(officePositionSize);
-                inFile.read(reinterpret_cast<char*>(&foundEmployee.officePosition[0]), officePositionSize);
-
-                inFile.read(reinterpret_cast<char*>(&foundEmployee.salary), sizeof(foundEmployee.salary));
-
-                if (foundEmployee.getId() == searchId) {
-                    inFile.close();
-                    return true;
-                }
-            }
-            inFile.close();
+        if (!inFile) {
+            return 0;
         }
+
+        int maxId = 0;
+        Employee temp;
+        while (inFile.peek() != EOF) {
+            temp.deserialize(inFile);
+            if (temp.getId() > maxId) {
+                maxId = temp.getId();
+            }
+        }
+
+        inFile.close();
+        return maxId;
+    }
+
+    bool isCellNumberRegistered(const string& filename, unsigned long long searchCellphone) const {
+        ifstream inFile(filename, ios::binary);
+        if (!inFile) {
+            cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
+            return false;
+        }
+
+        Employee employee;
+        while (inFile.peek() != EOF) {
+            employee.deserialize(inFile);
+            if (employee.getCellphone() == searchCellphone) {
+                inFile.close();
+                return true;
+            }
+        }
+
+        inFile.close();
         return false;
     }
 
+    static vector<Employee> findByName(const string& filename, const string& searchName) {
+        ifstream inFile(filename, ios::binary);
+        if (!inFile) {
+            cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
+            return vector<Employee>();
+        }
+
+        vector<Employee> foundEmployees;
+        Employee employee;
+        while (inFile.peek() != EOF) {
+            employee.deserialize(inFile);
+            if (employee.getName() == searchName) {
+                foundEmployees.push_back(employee);
+            }
+        }
+
+        inFile.close();
+        return foundEmployees;
+    }
+
+    static Employee findByID(const string& filename, int searchId) {
+        ifstream inFile(filename, ios::binary);
+        if (!inFile) {
+            cerr << "Erro ao abrir o arquivo " << filename << " para leitura." << endl;
+            Employee employee;
+            employee.setId(-1);
+            return employee;
+        }
+
+        Employee employee;
+        while (inFile.peek() != EOF) {
+            employee.deserialize(inFile);
+            if (employee.getId() == searchId) {
+                inFile.close();
+                return employee;
+            }
+        }
+
+        inFile.close();
+        employee.setId(-1);
+        return employee;
+    }
 
 
     /**
@@ -113,14 +165,17 @@ private:
      */
     void serialize(ostream& os) const {
         size_t nameSize = name.size();
-        size_t positionSize = officePosition.size();
+        size_t officePositionSize = officePosition.size();
 
         os.write(reinterpret_cast<const char*>(&id), sizeof(id));
+        os.write(reinterpret_cast<const char*>(&nameSize), sizeof(nameSize));
         os.write(name.c_str(), nameSize);
 
         os.write(reinterpret_cast<const char*>(&cellphone), sizeof(cellphone));
 
-        os.write(officePosition.c_str(), positionSize);
+        os.write(reinterpret_cast<const char*>(&officePositionSize), sizeof(officePositionSize));
+        os.write(officePosition.c_str(), officePositionSize);
+
         os.write(reinterpret_cast<const char*>(&salary), sizeof(salary));
     }
 
@@ -139,7 +194,9 @@ private:
      * @param is O fluxo de entrada de onde os dados do funcionário serão lidos.
      */
     void deserialize(istream& is) {
-        size_t nameSize, positionSize;
+        size_t nameSize, officePositionSize;
+
+        is.read(reinterpret_cast<char*>(&id), sizeof(id));
 
         is.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
         name.resize(nameSize);
@@ -147,16 +204,23 @@ private:
 
         is.read(reinterpret_cast<char*>(&cellphone), sizeof(cellphone));
 
-        is.read(reinterpret_cast<char*>(&positionSize), sizeof(positionSize));
-        name.resize(positionSize);
-        is.read(&name[0], positionSize);
+        is.read(reinterpret_cast<char*>(&officePositionSize), sizeof(officePositionSize));
+        officePosition.resize(officePositionSize);
+        is.read(&officePosition[0], officePositionSize);
 
         is.read(reinterpret_cast<char*>(&salary), sizeof(salary));
     }
 
 
-};
+    friend ostream& operator<<(ostream& os, const Employee& employee) {
+        os << "ID: " << employee.id << endl;
+        os << "Nome: " << employee.name << endl;
+        os << "Telefone: " << employee.cellphone << endl;
+        os << "Cargo: " << employee.officePosition << endl;
+        os << "Salario: " << employee.salary << endl;
+        return os;
+    }
 
-int Employee::ID = 0;
+};
 
 #endif
